@@ -1,0 +1,43 @@
+{
+ "actions": [],
+ "creation": "2026-08-20 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_sms_notifications"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "description": "When enabled, customers and their sales manager receive an SMS after each delivery (still requires SMS Settings gateway to be configured, and each customer's own SMS toggle to be on)",
+   "fieldname": "enable_sms_notifications",
+   "fieldtype": "Check",
+   "label": "Enable Delivery SMS Notifications"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-20 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Neer Jal",
+ "name": "Sales Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Sales Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

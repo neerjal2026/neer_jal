@@ -1,0 +1,191 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "TRIP-.#####",
+ "creation": "2026-08-07 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle",
+  "driver",
+  "sales_person",
+  "status",
+  "column_break_main",
+  "start_km",
+  "cans_loaded",
+  "start_time",
+  "end_km",
+  "cans_delivered",
+  "cans_damaged",
+  "cans_remaining",
+  "end_time",
+  "distance_km",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Driver",
+   "options": "Driver",
+   "reqd": 1
+  },
+  {
+   "default": "__user",
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Sales Person",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nCompleted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_km",
+   "fieldtype": "Float",
+   "label": "Starting KM",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cans_loaded",
+   "fieldtype": "Int",
+   "label": "Cans Loaded for Trip",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "now",
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Start Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "end_km",
+   "fieldtype": "Float",
+   "label": "Ending KM",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cans_delivered",
+   "fieldtype": "Int",
+   "label": "Cans Delivered",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cans_damaged",
+   "fieldtype": "Int",
+   "label": "Cans Damaged",
+   "non_negative": 1,
+   "description": "Out of the cans not delivered, how many were damaged. Reduces the good cans returned to stock."
+  },
+  {
+   "default": "0",
+   "fieldname": "cans_remaining",
+   "fieldtype": "Int",
+   "label": "Cans Remaining (Good, Returned to Stock)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "distance_km",
+   "fieldtype": "Float",
+   "label": "Distance Travelled (km)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Neer Jal",
+ "name": "Trip",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Neer Jal</title>
+
+    <!-- PWA / Add to Home Screen -->
+    <meta name="theme-color" content="#1d4ed8" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Neer Jal" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/neer_jal/manifest/apple-icon-180.png" />
+    <link rel="icon" type="image/png" href="/neer_jal/manifest/manifest-icon-192.png" />
+
+    <!-- jinja: this block is rendered by Frappe when served from www/neer_jal.html -->
+    <script>
+      window.csrf_token = '{{ csrf_token }}'
+      window.frappe = window.frappe || {}
+      window.frappe.boot = window.frappe.boot || {}
+    </script>
+    <script type="module" crossorigin src="/neer_jal/assets/index-CNC9G3um.js"></script>
+    <link rel="stylesheet" crossorigin href="/neer_jal/assets/index-j_Vm0NNZ.css">
+  <link rel="manifest" href="/neer_jal/manifest.json"><script id="vite-plugin-pwa:register-sw" src="/neer_jal/registerSW.js"></script></head>
+  <body class="h-full">
+    <div id="app"></div>
+  </body>
+</html>

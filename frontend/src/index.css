@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+/* Boxed, larger form fields - easier for general/non-technical users to read and tap.
+   Applied via the .boxed-fields marker class on a form's field container. */
+.boxed-fields > .space-y-1.5,
+.boxed-fields > .inline-flex.items-center:has(input[type='checkbox']) {
+  background-color: theme('colors.blue.50');
+  border: 1px solid theme('colors.blue.100');
+  border-radius: theme('borderRadius.lg');
+  padding: 0.75rem;
+}
+
+.boxed-fields label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: theme('colors.blue.900');
+  margin-bottom: 0.25rem;
+}
+
+.boxed-fields input:not([type='checkbox']),
+.boxed-fields select,
+.boxed-fields textarea,
+.boxed-fields button[role='combobox'] {
+  height: 2.75rem;
+  font-size: 1rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.boxed-fields textarea {
+  height: auto;
+  min-height: 6rem;
+}
+
+.boxed-fields input[type='checkbox'] {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.boxed-fields input:focus,
+.boxed-fields select:focus,
+.boxed-fields textarea:focus {
+  border-color: theme('colors.blue.400') !important;
+}
+
+/* Bigger, easier-to-tap buttons app-wide (frappe-ui Button components only -
+   icon-only nav/menu buttons use plain native <button> markup and are unaffected). */
+button.inline-flex {
+  min-height: 2.75rem;
+  font-size: 1rem;
+  padding-left: 1.1rem;
+  padding-right: 1.1rem;
+}

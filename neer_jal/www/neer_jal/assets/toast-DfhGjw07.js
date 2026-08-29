@@ -1,0 +1,1 @@
+import{Q as n}from"./index-CNC9G3um.js";function s(t){n({title:t,icon:"check-circle",iconClasses:"text-green-600",timeout:3})}function m(t,c="Something went wrong"){var o;let i=c;typeof t=="string"&&t?i=t:t&&typeof t=="object"&&(i=((o=t.messages)==null?void 0:o[0])||t.message||c),n({title:i,icon:"alert-circle",iconClasses:"text-red-600",timeout:5})}export{s as a,m as s};

@@ -1,0 +1,187 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "CUST-.#####",
+ "creation": "2026-08-07 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer_code",
+  "customer_name",
+  "phone",
+  "disabled",
+  "sms_enabled",
+  "column_break_contact",
+  "address_line",
+  "city",
+  "section_break_can_settings",
+  "cans_required",
+  "column_break_can_settings",
+  "rate_per_can",
+  "section_break_balance",
+  "cans_pending",
+  "column_break_balance",
+  "amount_due",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer ID",
+   "read_only": 1,
+   "unique": 1,
+   "description": "Auto-generated 3-digit customer ID"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Phone",
+   "options": "Phone",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "default": "1",
+   "description": "Send this customer an SMS after each delivery (also requires SMS notifications to be enabled in Sales Settings)",
+   "fieldname": "sms_enabled",
+   "fieldtype": "Check",
+   "label": "SMS Notifications"
+  },
+  {
+   "fieldname": "column_break_contact",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "address_line",
+   "fieldtype": "Small Text",
+   "label": "Address Line"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City / Area"
+  },
+  {
+   "fieldname": "section_break_can_settings",
+   "fieldtype": "Section Break",
+   "label": "Water Can Settings"
+  },
+  {
+   "default": "0",
+   "description": "How many cans this customer usually needs per delivery",
+   "fieldname": "cans_required",
+   "fieldtype": "Int",
+   "label": "Cans Required (per delivery)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_can_settings",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rate_per_can",
+   "fieldtype": "Currency",
+   "label": "Rate per Can"
+  },
+  {
+   "fieldname": "section_break_balance",
+   "fieldtype": "Section Break",
+   "label": "Balance"
+  },
+  {
+   "description": "Full cans currently with the customer, not yet returned (auto-calculated from deliveries)",
+   "fieldname": "cans_pending",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Cans Pending",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_balance",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Total amount this customer still owes (auto-calculated from deliveries marked Pending)",
+   "fieldname": "amount_due",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount Due",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Neer Jal",
+ "name": "Customer",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

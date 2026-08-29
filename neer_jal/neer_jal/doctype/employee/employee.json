@@ -1,0 +1,307 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EMP-.#####",
+ "creation": "2026-08-28 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_code",
+  "employee_name",
+  "dob",
+  "gender",
+  "column_break_personal",
+  "phone",
+  "email",
+  "role",
+  "user",
+  "disabled",
+  "column_break_pay",
+  "hourly_wage",
+  "section_break_employment",
+  "joining_date",
+  "relieving_date",
+  "employment_type",
+  "column_break_employment",
+  "status",
+  "designation",
+  "section_break_address",
+  "current_address",
+  "permanent_address",
+  "column_break_address",
+  "pincode",
+  "state",
+  "id_number",
+  "section_break_emergency",
+  "emergency_contact",
+  "column_break_emergency",
+  "education",
+  "section_break_bank",
+  "bank_name",
+  "account_no",
+  "column_break_bank",
+  "ifsc_code",
+  "other_bank_details",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "description": "Auto-generated 3-digit employee ID",
+   "fieldname": "employee_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee ID",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dob",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "label": "Gender",
+   "options": "\nMale\nFemale\nOther"
+  },
+  {
+   "fieldname": "column_break_personal",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "description": "Leave blank for a normal employee with no app login. Set to give this employee a login.",
+   "fieldname": "role",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Role",
+   "options": "\nSales Person\nOffice Staff"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "Linked User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "column_break_pay",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hourly_wage",
+   "fieldtype": "Currency",
+   "label": "Hourly Wage"
+  },
+  {
+   "fieldname": "section_break_employment",
+   "fieldtype": "Section Break",
+   "label": "Employment"
+  },
+  {
+   "description": "Automatically set to the date this employee was added",
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Joining Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "relieving_date",
+   "fieldtype": "Date",
+   "label": "Relieving Date"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Select",
+   "label": "Employment Type",
+   "options": "\nFull-time\nPart-time\nContract\nDaily Wage"
+  },
+  {
+   "fieldname": "column_break_employment",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nOn Leave\nResigned\nTerminated"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "section_break_address",
+   "fieldtype": "Section Break",
+   "label": "Address & ID"
+  },
+  {
+   "fieldname": "current_address",
+   "fieldtype": "Small Text",
+   "label": "Current Address"
+  },
+  {
+   "fieldname": "permanent_address",
+   "fieldtype": "Small Text",
+   "label": "Permanent Address"
+  },
+  {
+   "fieldname": "column_break_address",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "6-digit postal PIN code",
+   "fieldname": "pincode",
+   "fieldtype": "Data",
+   "label": "Pincode"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "description": "e.g. Aadhaar number",
+   "fieldname": "id_number",
+   "fieldtype": "Data",
+   "label": "ID Number"
+  },
+  {
+   "fieldname": "section_break_emergency",
+   "fieldtype": "Section Break",
+   "label": "Emergency & Education"
+  },
+  {
+   "fieldname": "emergency_contact",
+   "fieldtype": "Data",
+   "label": "Emergency Contact"
+  },
+  {
+   "fieldname": "column_break_emergency",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "education",
+   "fieldtype": "Data",
+   "label": "Education"
+  },
+  {
+   "fieldname": "section_break_bank",
+   "fieldtype": "Section Break",
+   "label": "Bank Details"
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Data",
+   "label": "Bank"
+  },
+  {
+   "fieldname": "account_no",
+   "fieldtype": "Data",
+   "label": "Account No"
+  },
+  {
+   "fieldname": "column_break_bank",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ifsc_code",
+   "fieldtype": "Data",
+   "label": "IFSC Code"
+  },
+  {
+   "fieldname": "other_bank_details",
+   "fieldtype": "Small Text",
+   "label": "Others"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-28 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Neer Jal",
+ "name": "Employee",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Office Staff",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

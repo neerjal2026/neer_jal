@@ -1,0 +1,178 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "SALE-.#####",
+ "creation": "2026-08-07 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "customer_name",
+  "sales_person",
+  "trip",
+  "sales_date",
+  "column_break_main",
+  "cans_given",
+  "cans_returned",
+  "rate_per_can",
+  "amount",
+  "section_break_payment",
+  "payment_mode",
+  "column_break_payment",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "default": "__user",
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Delivered By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "trip",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Trip",
+   "options": "Trip",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "sales_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cans_given",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Cans Given (Full)",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cans_returned",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Refill",
+   "non_negative": 1,
+   "description": "How many empty cans the customer is handing back this visit. Cans delivered will match this amount."
+  },
+  {
+   "fetch_from": "customer.rate_per_can",
+   "fetch_if_empty": 1,
+   "fieldname": "rate_per_can",
+   "fieldtype": "Currency",
+   "label": "Rate per Can"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_payment",
+   "fieldtype": "Section Break",
+   "label": "Payment"
+  },
+  {
+   "default": "Cash",
+   "fieldname": "payment_mode",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Payment Mode",
+   "options": "Cash\nUPI\nPending\nLCR\nFree"
+  },
+  {
+   "fieldname": "column_break_payment",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Neer Jal",
+ "name": "Sales Entry",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
