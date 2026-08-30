@@ -2,7 +2,7 @@ import frappe
 
 APP_ROLES = {"System Manager", "Sales Manager", "Sales User", "Office Staff"}
 MANAGER_ROLES = {"System Manager", "Sales Manager"}
-HR_ROLES = {"System Manager", "Office Staff"}
+HR_ROLES = {"System Manager", "Sales Manager", "Office Staff"}
 
 
 def has_app_permission():
