@@ -21,8 +21,8 @@ wheels/
 .installed.cfg
 *.egg
 tags
-MANIFEST
-
+/neer_jal/www/*
+!/neer_jal/www/neer_jal.py
 # Environments
 .env
 .venv
