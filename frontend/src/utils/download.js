@@ -1,10 +1,6 @@
 import { showSuccess, showError } from '@/utils/toast'
 
-// window.open() relies on the browser's own download UI (progress bar, downloads
-// tray, etc). That UI doesn't exist in an installed, standalone-mode PWA, so a
-// PDF export can succeed with zero visible feedback to the user. This fetches
-// the file ourselves and hands it to the OS share sheet (visible, works well on
-// mobile) or falls back to a blob link click, always confirming with a toast.
+// Fetch the file and hand it to the OS share sheet, with a download fallback.
 export async function downloadFile(url, filename, mimeType = 'application/pdf') {
   let response
   try {
@@ -35,8 +31,6 @@ export async function downloadFile(url, filename, mimeType = 'application/pdf') 
       showSuccess('Ready to save or share')
       return
     } catch (error) {
-      // User cancelled the share sheet - not an error, don't fall through to
-      // the download link (that would fire a second, unwanted action).
       if (error?.name === 'AbortError') return
     }
   }

@@ -221,7 +221,6 @@ async function downloadPdf() {
   })
   if (filters.customer) params.set('customer', filters.customer)
   if (filters.sales_person) params.set('sales_person', filters.sales_person)
-
   const url = `/api/method/neer_jal.api.reports.download_delivery_report_pdf?${params.toString()}`
   const filename = `delivery-report-${filters.from_date}-to-${filters.to_date}.pdf`
   try {
