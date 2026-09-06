@@ -1,5 +1,5 @@
 import frappe
-from frappe.utils import flt, getdate, now_datetime
+from frappe.utils import flt, getdate, get_datetime, now_datetime
 from frappe.utils.pdf import get_pdf
 
 from neer_jal.api.permission import HR_ROLES, MANAGER_ROLES
@@ -240,6 +240,45 @@ def clock_out(employee):
 	log = frappe.get_doc("Time Log", open_name)
 	log.time_out = now_datetime()
 	log.save(ignore_permissions=True)
+	return log.as_dict()
+
+
+@frappe.whitelist()
+def add_past_time_log(employee, time_in, time_out):
+	_ensure_hr_manager()
+	if not frappe.db.exists("Employee", {"name": employee, "disabled": 0}):
+		frappe.throw("Select an active employee")
+
+	time_in = get_datetime(time_in)
+	time_out = get_datetime(time_out)
+
+	if not time_in or not time_out:
+		frappe.throw("Time In and Time Out are required")
+	if time_out <= time_in:
+		frappe.throw("Time Out must be after Time In")
+	if time_out > now_datetime():
+		frappe.throw("Past time logs cannot contain future times")
+
+	logs = frappe.get_all(
+		"Time Log",
+		filters={"employee": employee},
+		fields=["time_in", "time_out"],
+	)
+	for log in logs:
+		log_time_in = get_datetime(log.time_in)
+		log_time_out = get_datetime(log.time_out) if log.time_out else now_datetime()
+		if time_in < log_time_out and time_out > log_time_in:
+			frappe.throw("This time range overlaps an existing time log")
+
+	log = frappe.get_doc(
+		{
+			"doctype": "Time Log",
+			"employee": employee,
+			"time_in": time_in,
+			"time_out": time_out,
+		}
+	)
+	log.insert(ignore_permissions=True)
 	return log.as_dict()
 
 
