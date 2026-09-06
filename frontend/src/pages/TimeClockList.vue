@@ -52,15 +52,37 @@
         </tbody>
       </table>
     </div>
+
+    <Dialog v-model="showConfirmDialog" :options="{ title: pendingRow?.clocked_in ? 'Confirm Time Out' : 'Confirm Time In', size: 'sm' }">
+      <template #body-content>
+        <p class="text-sm text-gray-600">
+          {{ pendingRow?.clocked_in ? 'Are you sure you want to record time out for' : 'Are you sure you want to record time in for' }}
+          <span class="font-medium text-gray-900">{{ pendingRow?.employee_name }}</span>?
+        </p>
+      </template>
+      <template #actions>
+        <Button
+          :theme="pendingRow?.clocked_in ? 'red' : 'blue'"
+          variant="solid"
+          class="w-full"
+          :loading="actionLoading === pendingRow?.name"
+          @click="confirmToggle"
+        >
+          {{ pendingRow?.clocked_in ? 'Confirm Time Out' : 'Confirm Time In' }}
+        </Button>
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
-import { Button, Badge, FormControl, createResource } from 'frappe-ui'
+import { Button, Badge, Dialog, FormControl, createResource } from 'frappe-ui'
 import { showError } from '@/utils/toast'
 
 const actionLoading = ref(null)
+const pendingRow = ref(null)
+const showConfirmDialog = ref(false)
 const search = ref('')
 
 const employees = createResource({
@@ -82,6 +104,14 @@ const clockIn = createResource({ url: 'neer_jal.api.employees.clock_in' })
 const clockOut = createResource({ url: 'neer_jal.api.employees.clock_out' })
 
 function toggle(row) {
+  pendingRow.value = row
+  showConfirmDialog.value = true
+}
+
+function confirmToggle() {
+  const row = pendingRow.value
+  if (!row) return
+
   actionLoading.value = row.name
   const action = row.clocked_in ? clockOut : clockIn
   action.submit(
@@ -89,6 +119,8 @@ function toggle(row) {
     {
       onSuccess() {
         actionLoading.value = null
+        showConfirmDialog.value = false
+        pendingRow.value = null
         employees.reload()
       },
       onError(error) {
