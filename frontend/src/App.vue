@@ -88,6 +88,7 @@ const navItems = computed(() => {
   if (isHrManager.value && !isManager.value) {
     return [
       { label: 'Time Clock', to: '/time-clock' },
+      { label: 'Salary Advances', to: '/salary-advances' },
       { label: 'Payroll', to: '/payroll' },
     ]
   }
@@ -110,6 +111,7 @@ const navItems = computed(() => {
   if (isHrManager.value) {
     items.push(
       { label: 'Time Clock', to: '/time-clock' },
+      { label: 'Salary Advances', to: '/salary-advances' },
       { label: 'Payroll', to: '/payroll' },
     )
   }

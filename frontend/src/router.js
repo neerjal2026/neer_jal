@@ -54,6 +54,11 @@ const routes = [
     component: () => import('@/pages/PayrollReport.vue'),
   },
   {
+    path: '/salary-advances',
+    name: 'SalaryAdvanceList',
+    component: () => import('@/pages/SalaryAdvanceList.vue'),
+  },
+  {
     path: '/trips',
     name: 'TripList',
     component: () => import('@/pages/TripList.vue'),

@@ -346,6 +346,86 @@ def add_past_time_log(employee, time_in, time_out):
 	return log.as_dict()
 
 
+def _month_bounds(month):
+	try:
+		month_start = datetime.strptime(str(month), "%Y-%m")
+	except (TypeError, ValueError):
+		frappe.throw("Month must be in YYYY-MM format")
+	if month_start.month == 12:
+		next_month = month_start.replace(year=month_start.year + 1, month=1)
+	else:
+		next_month = month_start.replace(month=month_start.month + 1)
+	return month_start, next_month
+
+
+@frappe.whitelist()
+def get_salary_advances(month, page=1, page_length=10):
+	_ensure_hr_manager()
+	month_start, next_month = _month_bounds(month)
+	page = max(1, int(page))
+	page_length = min(100, max(1, int(page_length)))
+	filters = {"advance_date": ["between", [month_start, next_month]]}
+	total = frappe.db.count("Salary Advance", filters=filters)
+	advances = frappe.get_all(
+		"Salary Advance",
+		filters=filters,
+		fields=["name", "employee", "advance_date", "amount", "status", "notes"],
+		order_by="advance_date desc, creation desc",
+		start=(page - 1) * page_length,
+		page_length=page_length,
+	)
+	employee_names = {advance.employee for advance in advances}
+	employees = frappe.get_all(
+		"Employee",
+		filters={"name": ["in", list(employee_names)]},
+		fields=["name", "employee_code", "employee_name"],
+	) if employee_names else []
+	employees_by_name = {employee.name: employee for employee in employees}
+	for advance in advances:
+		employee = employees_by_name.get(advance.employee)
+		advance["employee_code"] = employee.employee_code if employee else ""
+		advance["employee_name"] = employee.employee_name if employee else advance.employee
+
+	return {
+		"advances": advances,
+		"total": total,
+		"page": page,
+		"page_length": page_length,
+		"total_pages": (total + page_length - 1) // page_length,
+	}
+
+
+@frappe.whitelist()
+def create_salary_advance(employee, advance_date, amount, notes=None):
+	_ensure_hr_manager()
+	if not frappe.db.exists("Employee", {"name": employee, "disabled": 0}):
+		frappe.throw("Select an active employee")
+
+	advance = frappe.get_doc(
+		{
+			"doctype": "Salary Advance",
+			"employee": employee,
+			"advance_date": advance_date,
+			"amount": amount,
+			"status": "Unpaid",
+			"notes": notes,
+		}
+	)
+	advance.insert(ignore_permissions=True)
+	return advance.as_dict()
+
+
+@frappe.whitelist()
+def cancel_salary_advance(name):
+	_ensure_hr_manager()
+	advance = frappe.get_doc("Salary Advance", name)
+	if advance.status != "Unpaid":
+		frappe.throw("Only unpaid advances can be cancelled")
+	advance.status = "Cancelled"
+	advance.save(ignore_permissions=True)
+	return advance.as_dict()
+
+
 def _date_range_bounds(from_date, to_date):
 	return f"{getdate(from_date)} 00:00:00", f"{getdate(to_date)} 23:59:59"
 
@@ -370,6 +450,11 @@ def run_payroll(from_date, to_date):
 		filters={"time_out": ["is", "set"], "time_in": ["between", [from_dt, to_dt]]},
 		fields=["employee", "hours"],
 	)
+	advances = frappe.get_all(
+		"Salary Advance",
+		filters={"advance_date": ["between", [from_date, to_date]], "status": "Unpaid"},
+		fields=["employee", "amount"],
+	)
 
 	total_hours_by_employee = {}
 	for log in logs:
@@ -377,12 +462,17 @@ def run_payroll(from_date, to_date):
 			log.hours
 		)
 
-	if not total_hours_by_employee:
+	advance_by_employee = {}
+	for advance in advances:
+		advance_by_employee[advance.employee] = advance_by_employee.get(advance.employee, 0) + flt(advance.amount)
+
+	employee_names = set(total_hours_by_employee) | set(advance_by_employee)
+	if not employee_names:
 		return []
 
 	employees = frappe.get_all(
 		"Employee",
-		filters={"name": ["in", list(total_hours_by_employee.keys())]},
+		filters={"name": ["in", list(employee_names)]},
 		fields=["name", "employee_name", "hourly_wage"],
 	)
 
@@ -390,6 +480,7 @@ def run_payroll(from_date, to_date):
 	for employee in employees:
 		total_hours = total_hours_by_employee.get(employee.name, 0)
 		_, hours_display, total_pay = _calculate_pay(employee.hourly_wage, total_hours)
+		advance_amount = flt(advance_by_employee.get(employee.name, 0), 2)
 		result.append(
 			{
 				"employee": employee.name,
@@ -398,6 +489,8 @@ def run_payroll(from_date, to_date):
 				"total_hours": flt(total_hours, 2),
 				"hours_display": hours_display,
 				"total_pay": total_pay,
+				"advance_amount": advance_amount,
+				"net_pay": flt(total_pay - advance_amount, 2),
 			}
 		)
 
@@ -405,7 +498,7 @@ def run_payroll(from_date, to_date):
 	return result
 
 
-def _build_payslip_html(employee, from_date, to_date, logs, hours_display, total_pay):
+def _build_payslip_html(employee, from_date, to_date, logs, hours_display, total_pay, advance_amount):
 	rows = "".join(
 		f"""
 		<tr>
@@ -459,7 +552,9 @@ def _build_payslip_html(employee, from_date, to_date, logs, hours_display, total
 		<table class="summary">
 			<tr><td>Hourly Wage</td><td style="text-align:right">{flt(employee.hourly_wage):.2f}</td></tr>
 			<tr><td>Total Hours</td><td style="text-align:right">{hours_display}</td></tr>
-			<tr><td>Total Pay</td><td style="text-align:right">{total_pay:.2f}</td></tr>
+			<tr><td>Gross Pay</td><td style="text-align:right">{total_pay:.2f}</td></tr>
+			<tr><td>Salary Advance</td><td style="text-align:right">-{advance_amount:.2f}</td></tr>
+			<tr><td>Net Pay</td><td style="text-align:right">{total_pay - advance_amount:.2f}</td></tr>
 		</table>
 	</body>
 	</html>
@@ -483,8 +578,18 @@ def download_payslip_pdf(employee, from_date, to_date):
 
 	total_hours = sum(flt(log.hours) for log in logs)
 	_, hours_display, total_pay = _calculate_pay(emp.hourly_wage, total_hours)
+	advances = frappe.get_all(
+		"Salary Advance",
+		filters={
+			"employee": employee,
+			"advance_date": ["between", [from_date, to_date]],
+			"status": "Unpaid",
+		},
+		fields=["amount"],
+	)
+	advance_amount = sum(flt(advance.amount) for advance in advances)
 
-	html = _build_payslip_html(emp, from_date, to_date, logs, hours_display, total_pay)
+	html = _build_payslip_html(emp, from_date, to_date, logs, hours_display, total_pay, advance_amount)
 
 	frappe.local.response.filename = f"payslip-{emp.name}-{getdate(from_date)}-to-{getdate(to_date)}.pdf"
 	frappe.local.response.filecontent = get_pdf(html, {"orientation": "Portrait"})

@@ -22,7 +22,9 @@
             <th class="px-4 py-3 font-medium">Employee</th>
             <th class="px-4 py-3 font-medium">Hourly Wage</th>
             <th class="px-4 py-3 font-medium">Hours Worked</th>
-            <th class="px-4 py-3 font-medium">Total Pay</th>
+            <th class="px-4 py-3 font-medium">Gross Pay</th>
+            <th class="px-4 py-3 font-medium">Advance</th>
+            <th class="px-4 py-3 font-medium">Net Pay</th>
             <th class="px-4 py-3 font-medium"></th>
           </tr>
         </thead>
@@ -32,6 +34,8 @@
             <td class="px-4 py-3 text-gray-600">{{ formatCurrency(row.hourly_wage) }}</td>
             <td class="px-4 py-3 text-gray-600">{{ row.hours_display }}</td>
             <td class="px-4 py-3 font-medium text-gray-900">{{ formatCurrency(row.total_pay) }}</td>
+            <td class="px-4 py-3 text-red-600">{{ formatCurrency(row.advance_amount) }}</td>
+            <td class="px-4 py-3 font-medium text-gray-900">{{ formatCurrency(row.net_pay) }}</td>
             <td class="px-4 py-3">
               <Button
                 theme="blue"
@@ -44,14 +48,14 @@
             </td>
           </tr>
           <tr v-if="!payroll.data.length">
-            <td colspan="5" class="px-4 py-10 text-center text-gray-400">
-              No time logs found for this date range
+            <td colspan="7" class="px-4 py-10 text-center text-gray-400">
+              No payroll records found for this date range
             </td>
           </tr>
         </tbody>
         <tfoot v-if="payroll.data.length">
           <tr class="border-t bg-gray-50 font-semibold text-gray-900">
-            <td class="px-4 py-3" colspan="3">Total</td>
+            <td class="px-4 py-3" colspan="5">Net Total</td>
             <td class="px-4 py-3" colspan="2">{{ formatCurrency(grandTotal) }}</td>
           </tr>
         </tfoot>
@@ -100,7 +104,7 @@ function run() {
   )
 }
 
-const grandTotal = computed(() => (payroll.data || []).reduce((sum, row) => sum + Number(row.total_pay || 0), 0))
+const grandTotal = computed(() => (payroll.data || []).reduce((sum, row) => sum + Number(row.net_pay || 0), 0))
 
 const payslipLoading = ref(null)
 
