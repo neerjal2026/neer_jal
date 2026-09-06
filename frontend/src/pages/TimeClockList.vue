@@ -31,7 +31,11 @@
         <tbody>
           <tr v-for="row in filteredEmployees" :key="row.name" class="border-b last:border-0">
             <td class="px-4 py-3 text-gray-600">{{ row.employee_code }}</td>
-            <td class="px-4 py-3 font-medium text-gray-900">{{ row.employee_name }}</td>
+            <td class="px-4 py-3 font-medium text-gray-900">
+              <button class="text-left hover:text-blue-700 hover:underline" @click="openEmployeeLogs(row)">
+                {{ row.employee_name }}
+              </button>
+            </td>
             <td class="px-4 py-3">
               <Badge :theme="row.clocked_in ? 'green' : 'gray'" variant="subtle">
                 {{ row.clocked_in ? 'Clocked In' : 'Clocked Out' }}
@@ -39,14 +43,25 @@
             </td>
             <td class="px-4 py-3 text-gray-600">{{ row.clocked_in ? row.time_in : '-' }}</td>
             <td class="px-4 py-3">
-              <Button
-                :theme="row.clocked_in ? 'red' : 'blue'"
-                variant="solid"
-                :loading="actionLoading === row.name"
-                @click="toggle(row)"
-              >
-                {{ row.clocked_in ? 'Time Out' : 'Time In' }}
-              </Button>
+              <div class="flex items-center gap-2 whitespace-nowrap">
+                <Button
+                  :theme="row.clocked_in ? 'red' : 'blue'"
+                  variant="solid"
+                  :loading="actionLoading === row.name"
+                  @click="toggle(row)"
+                >
+                  {{ row.clocked_in ? 'Time Out' : 'Time In' }}
+                </Button>
+                <Button
+                  v-if="row.clocked_in"
+                  theme="red"
+                  variant="outline"
+                  :loading="cancelLoading === row.name"
+                  @click="openCancelDialog(row)"
+                >
+                  Cancel Time Log
+                </Button>
+              </div>
             </td>
           </tr>
           <tr v-if="!employees.loading && !filteredEmployees.length">
@@ -74,6 +89,27 @@
           @click="confirmToggle"
         >
           {{ pendingRow?.clocked_in ? 'Confirm Time Out' : 'Confirm Time In' }}
+        </Button>
+      </template>
+    </Dialog>
+
+    <Dialog v-model="showCancelDialog" :options="{ title: 'Cancel Time Log', size: 'sm' }">
+      <template #body-content>
+        <p class="text-sm text-gray-600">
+          Cancel the current time log for
+          <span class="font-medium text-gray-900">{{ cancelRow?.employee_name }}</span>?
+          This will discard the current Time In without recording working hours.
+        </p>
+      </template>
+      <template #actions>
+        <Button
+          theme="red"
+          variant="solid"
+          class="w-full"
+          :loading="cancelLoading === cancelRow?.name"
+          @click="confirmCancel"
+        >
+          Cancel Time Log
         </Button>
       </template>
     </Dialog>
@@ -136,17 +172,22 @@
 
 <script setup>
 import { computed, reactive, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { Button, Badge, Dialog, ErrorMessage, FeatherIcon, FormControl, createResource } from 'frappe-ui'
 import { isHrManager } from '@/utils/session'
 import { showError, showSuccess } from '@/utils/toast'
 
 const actionLoading = ref(null)
+const cancelLoading = ref(null)
 const pendingRow = ref(null)
+const cancelRow = ref(null)
 const showConfirmDialog = ref(false)
+const showCancelDialog = ref(false)
 const showManualDialog = ref(false)
 const search = ref('')
 const employeeSearch = ref('')
 const manualForm = reactive({ employee: '', time_in: '', time_out: '' })
+const router = useRouter()
 
 const employees = createResource({
   url: 'neer_jal.api.employees.get_employees_with_status',
@@ -175,6 +216,7 @@ const selectedEmployee = computed(() => (employees.data || []).find((row) => row
 
 const clockIn = createResource({ url: 'neer_jal.api.employees.clock_in' })
 const clockOut = createResource({ url: 'neer_jal.api.employees.clock_out' })
+const cancelTimeLog = createResource({ url: 'neer_jal.api.employees.cancel_time_log' })
 const manualLog = createResource({ url: 'neer_jal.api.employees.add_past_time_log' })
 
 watch(showManualDialog, (value) => {
@@ -187,6 +229,10 @@ watch(showManualDialog, (value) => {
 function toggle(row) {
   pendingRow.value = row
   showConfirmDialog.value = true
+}
+
+function openEmployeeLogs(row) {
+  router.push({ name: 'EmployeeTimeLogs', params: { employee: row.name } })
 }
 
 function confirmToggle() {
@@ -207,6 +253,34 @@ function confirmToggle() {
       onError(error) {
         actionLoading.value = null
         showError(error, 'Could not update time clock')
+      },
+    },
+  )
+}
+
+function openCancelDialog(row) {
+  cancelRow.value = row
+  showCancelDialog.value = true
+}
+
+function confirmCancel() {
+  const row = cancelRow.value
+  if (!row) return
+
+  cancelLoading.value = row.name
+  cancelTimeLog.submit(
+    { employee: row.name },
+    {
+      onSuccess() {
+        cancelLoading.value = null
+        showCancelDialog.value = false
+        cancelRow.value = null
+        showSuccess('Time log cancelled')
+        employees.reload()
+      },
+      onError(error) {
+        cancelLoading.value = null
+        showError(error, 'Could not cancel time log')
       },
     },
   )

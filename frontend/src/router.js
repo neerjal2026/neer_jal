@@ -43,6 +43,12 @@ const routes = [
     component: () => import('@/pages/TimeClockList.vue'),
   },
   {
+    path: '/time-clock/:employee',
+    name: 'EmployeeTimeLogs',
+    component: () => import('@/pages/EmployeeTimeLogs.vue'),
+    props: true,
+  },
+  {
     path: '/payroll',
     name: 'PayrollReport',
     component: () => import('@/pages/PayrollReport.vue'),

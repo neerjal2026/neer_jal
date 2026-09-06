@@ -1,4 +1,5 @@
 import frappe
+from datetime import datetime
 from frappe.utils import flt, getdate, get_datetime, now_datetime
 from frappe.utils.pdf import get_pdf
 
@@ -241,6 +242,69 @@ def clock_out(employee):
 	log.time_out = now_datetime()
 	log.save(ignore_permissions=True)
 	return log.as_dict()
+
+
+@frappe.whitelist()
+def cancel_time_log(employee):
+	_ensure_hr_manager()
+	open_name = frappe.db.exists("Time Log", {"employee": employee, "time_out": ["is", "not set"]})
+	if not open_name:
+		frappe.throw("This employee does not have an active time log")
+
+	frappe.delete_doc("Time Log", open_name, ignore_permissions=True)
+	return {"cancelled": open_name}
+
+
+@frappe.whitelist()
+def get_employee_time_logs(employee, month, page=1, page_length=10):
+	_ensure_hr_manager()
+	employee_doc = frappe.db.get_value(
+		"Employee", employee, ["name", "employee_code", "employee_name"], as_dict=True
+	)
+	if not employee_doc:
+		frappe.throw("Employee not found")
+
+	try:
+		month_start = datetime.strptime(str(month), "%Y-%m")
+	except (TypeError, ValueError):
+		frappe.throw("Month must be in YYYY-MM format")
+
+	if month_start.month == 12:
+		next_month = month_start.replace(year=month_start.year + 1, month=1)
+	else:
+		next_month = month_start.replace(month=month_start.month + 1)
+
+	page = max(1, int(page))
+	page_length = min(100, max(1, int(page_length)))
+	filters = {"employee": employee, "time_in": ["between", [month_start, next_month]]}
+	total = frappe.db.count("Time Log", filters=filters)
+	logs = frappe.get_all(
+		"Time Log",
+		filters=filters,
+		fields=["name", "time_in", "time_out", "hours"],
+		order_by="time_in desc",
+		start=(page - 1) * page_length,
+		page_length=page_length,
+	)
+
+	return {
+		"employee": employee_doc,
+		"logs": logs,
+		"total": total,
+		"page": page,
+		"page_length": page_length,
+		"total_pages": (total + page_length - 1) // page_length,
+	}
+
+
+@frappe.whitelist()
+def delete_time_log(name):
+	_ensure_hr_manager()
+	if not frappe.db.exists("Time Log", name):
+		frappe.throw("Time log not found")
+
+	frappe.delete_doc("Time Log", name, ignore_permissions=True)
+	return {"deleted": name}
 
 
 @frappe.whitelist()
