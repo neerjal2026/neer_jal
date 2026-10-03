@@ -22,7 +22,7 @@ fixtures = [
 add_to_apps_screen = [
 	{
 		"name": "neer_jal",
-		"logo": "/neer_jal/favicon.svg",
+		"logo": "/assets/neer_jal/favicon.svg",
 		"title": "Neer Jal",
 		"route": "/neer_jal",
 		"has_permission": "neer_jal.api.permission.has_app_permission",
