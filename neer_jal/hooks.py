@@ -4,6 +4,7 @@ app_publisher = "Neer Jal"
 app_description = "Neer Jal"
 app_email = "support@neerjal.com"
 app_license = "mit"
+app_logo_url = "/assets/neer_jal/favicon.svg"
 
 # Apps
 # ------------------
