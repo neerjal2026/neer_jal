@@ -10,3 +10,4 @@ neer_jal.patches.v1_0.driver_based_trip_accounts
 neer_jal.patches.v1_1.remove_delivery_subsystem
 neer_jal.patches.v1_2.rename_fleet_vehicle_doctype
 neer_jal.patches.v1_3.migrate_employee_doctype
+neer_jal.patches.v1_4.refresh_desktop_app_logo
