@@ -11,10 +11,10 @@ def execute():
 			"""
 		)
 
-	if frappe.db.has_column("Employee", "role"):
+	if frappe.db.has_column("Neer Jal Employee", "role"):
 		frappe.db.sql(
 			"""
-			update `tabEmployee`
+			update `tabNeer Jal Employee`
 			set role = 'Driver'
 			where role = 'Sales Person'
 			"""

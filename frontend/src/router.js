@@ -4,23 +4,7 @@ import { session } from './utils/session'
 const routes = [
   {
     path: '/',
-    redirect: '/sales',
-  },
-  {
-    path: '/sales',
-    name: 'SalesList',
-    component: () => import('@/pages/SalesList.vue'),
-  },
-  {
-    path: '/customers',
-    name: 'CustomerList',
-    component: () => import('@/pages/CustomerList.vue'),
-  },
-  {
-    path: '/customers/:customerId',
-    name: 'CustomerDetail',
-    component: () => import('@/pages/CustomerDetail.vue'),
-    props: true,
+    redirect: '/trips',
   },
   {
     path: '/vehicles',
@@ -74,16 +58,6 @@ const routes = [
     name: 'ReportsList',
     component: () => import('@/pages/ReportsList.vue'),
   },
-  {
-    path: '/lcr',
-    name: 'LcrList',
-    component: () => import('@/pages/LcrList.vue'),
-  },
-  {
-    path: '/settings',
-    name: 'SettingsPage',
-    component: () => import('@/pages/SettingsPage.vue'),
-  },
 ]
 
 const router = createRouter({
@@ -91,13 +65,11 @@ const router = createRouter({
   routes,
 })
 
-// A pure Office Staff user (no manager role) only has the Time Clock tab -
-// landing them on /sales (which they have no nav entry for, and no
-// permission on) is confusing, so send them straight to their one page.
+// Office Staff users only have the HR tabs, so land them on Time Clock.
 router.beforeEach(async (to, from) => {
-  if (to.path === '/sales' && from.path === '/') {
+  if (to.path === '/trips' && from.path === '/') {
     if (session.loading) await session.promise
-    if (session.data?.is_hr_manager && !session.data?.is_manager) {
+    if (session.data?.is_hr_manager && !session.data?.is_manager && !(session.data?.roles || []).includes('Sales User')) {
       return '/time-clock'
     }
   }

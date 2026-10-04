@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint, flt, now_datetime
+from frappe.utils import flt, now_datetime
 
 
 class Trip(Document):
@@ -12,7 +12,6 @@ class Trip(Document):
 			frappe.throw("Only a driver login can start a trip")
 
 		self.driver = frappe.session.user
-		self.sales_person = self.driver
 		if not self.trip_route:
 			frappe.throw("Please select a trip route")
 
@@ -47,7 +46,7 @@ class Trip(Document):
 	def validate(self):
 		previous = self.get_doc_before_save() if not self.is_new() else None
 		if previous:
-			if previous.status == "Completed" and not self.end_km:
+			if previous.status == "Completed" and self.end_km is None:
 				frappe.throw("A completed trip cannot be reopened")
 			self.driver = previous.driver
 			self.trip_route = previous.trip_route
@@ -56,16 +55,7 @@ class Trip(Document):
 		if not self.start_time:
 			self.start_time = now_datetime()
 
-		self.cans_damaged = cint(self.cans_damaged)
-		not_delivered = cint(self.cans_loaded) - cint(self.cans_delivered)
-		if self.cans_damaged > not_delivered:
-			frappe.throw(
-				f"Damaged cans ({self.cans_damaged}) cannot exceed the "
-				f"{not_delivered} can(s) not yet delivered on this trip"
-			)
-		self.cans_remaining = not_delivered - self.cans_damaged
-
-		if flt(self.end_km):
+		if self.end_km is not None:
 			if flt(self.end_km) < flt(self.start_km):
 				frappe.throw("Ending KM cannot be less than Starting KM")
 			self.distance_km = flt(self.end_km) - flt(self.start_km)

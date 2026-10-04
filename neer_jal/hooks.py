@@ -36,9 +36,6 @@ add_to_apps_screen = [
 # is a real static file under www/neer_jal/ and is left alone so it's served as-is -
 # this keeps the service worker's scope covering the whole /neer_jal/ path.
 website_route_rules = [
-	{"from_route": "/neer_jal/customers/<path:customer_id>", "to_route": "neer_jal"},
-	{"from_route": "/neer_jal/customers", "to_route": "neer_jal"},
-	{"from_route": "/neer_jal/sales", "to_route": "neer_jal"},
 	{"from_route": "/neer_jal/vehicles", "to_route": "neer_jal"},
 	{"from_route": "/neer_jal/trip-routes", "to_route": "neer_jal"},
 	{"from_route": "/neer_jal/employees", "to_route": "neer_jal"},
@@ -49,8 +46,6 @@ website_route_rules = [
 	{"from_route": "/neer_jal/trips/<path:trip_id>", "to_route": "neer_jal"},
 	{"from_route": "/neer_jal/trips", "to_route": "neer_jal"},
 	{"from_route": "/neer_jal/reports", "to_route": "neer_jal"},
-	{"from_route": "/neer_jal/lcr", "to_route": "neer_jal"},
-	{"from_route": "/neer_jal/settings", "to_route": "neer_jal"},
 	{"from_route": "/neer_jal", "to_route": "neer_jal"},
 ]
 

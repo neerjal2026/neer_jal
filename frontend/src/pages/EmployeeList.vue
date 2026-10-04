@@ -104,7 +104,7 @@ const editingEmployee = ref(null)
 const selectedEmployee = ref(null)
 
 const employees = createListResource({
-  doctype: 'Employee',
+  doctype: 'Neer Jal Employee',
   fields: [
     'name',
     'employee_code',
@@ -178,7 +178,7 @@ function confirmDelete() {
 }
 
 function roleTheme(role) {
-  return { Driver: 'blue', 'Sales Person': 'blue', 'Office Staff': 'orange' }[role] || 'gray'
+  return { Driver: 'blue', 'Office Staff': 'orange' }[role] || 'gray'
 }
 
 function formatCurrency(value) {

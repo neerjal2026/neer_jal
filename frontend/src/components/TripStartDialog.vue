@@ -17,13 +17,7 @@
           v-model="form.trip_route"
         />
         <FormControl type="number" label="Starting KM (Odometer)" required v-model="form.start_km" />
-        <FormControl
-          type="number"
-          label="Cans Loaded for Trip"
-          required
-          v-model="form.cans_loaded"
-          description="Total full cans being taken on this trip"
-        />
+        <FormControl type="textarea" label="Notes" v-model="form.notes" />
       </div>
       <ErrorMessage class="mt-3 block" :message="startTrip.error" />
     </template>
@@ -51,7 +45,7 @@ const show = computed({
 })
 
 const vehicles = createListResource({
-  doctype: 'Vehicle',
+  doctype: 'Neer Jal Vehicle',
   fields: ['name', 'vehicle_number', 'model'],
   filters: { disabled: 0 },
   orderBy: 'vehicle_number asc',
@@ -83,7 +77,7 @@ const routeOptions = computed(() =>
 )
 
 function emptyForm() {
-  return { vehicle: '', trip_route: '', start_km: 0, cans_loaded: 0 }
+  return { vehicle: '', trip_route: '', start_km: 0, notes: '' }
 }
 
 let form = reactive(emptyForm())
@@ -101,10 +95,6 @@ function submit() {
     showError('Please select a vehicle and trip route')
     return
   }
-  if (!form.cans_loaded || Number(form.cans_loaded) <= 0) {
-    showError('Please enter how many cans are being loaded for this trip')
-    return
-  }
   startTrip.submit(
     {
       doc: {
@@ -112,7 +102,7 @@ function submit() {
         vehicle: form.vehicle,
         trip_route: form.trip_route,
         start_km: form.start_km,
-        cans_loaded: form.cans_loaded,
+        notes: form.notes,
       },
     },
     {

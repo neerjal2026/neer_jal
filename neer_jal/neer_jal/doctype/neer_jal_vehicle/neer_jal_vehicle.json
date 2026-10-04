@@ -1,37 +1,38 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "DRV-.#####",
- "creation": "2026-08-07 00:00:00.000000",
+ "allow_rename": 0,
+ "autoname": "field:vehicle_number",
+ "creation": "2026-10-03 00:00:00.000000",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "driver_name",
-  "phone",
-  "license_number",
+  "vehicle_number",
+  "model",
+  "mileage",
   "disabled"
  ],
  "fields": [
   {
-   "fieldname": "driver_name",
+   "fieldname": "vehicle_number",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Driver Name",
-   "reqd": 1
+   "label": "Vehicle Number",
+   "reqd": 1,
+   "unique": 1
   },
   {
-   "fieldname": "phone",
+   "fieldname": "model",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Phone",
-   "options": "Phone"
+   "label": "Model"
   },
   {
-   "fieldname": "license_number",
-   "fieldtype": "Data",
+   "fieldname": "mileage",
+   "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "License Number"
+   "label": "Mileage (km/l)",
+   "non_negative": 1
   },
   {
    "default": "0",
@@ -42,11 +43,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-07 00:00:00.000000",
+ "modified": "2026-10-03 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Neer Jal",
- "name": "Driver",
- "naming_rule": "Expression",
+ "name": "Neer Jal Vehicle",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -83,8 +84,8 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
- "sort_order": "DESC",
+ "sort_field": "vehicle_number",
+ "sort_order": "ASC",
  "states": [],
  "track_changes": 1
 }

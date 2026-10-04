@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Neer Jal and contributors
+# For license information, please see license.txt
+
 import re
 
 import frappe
@@ -11,13 +14,13 @@ EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 MAX_EMPLOYEE_CODE = 999
 
 
-class Employee(Document):
+class NeerJalEmployee(Document):
 	def before_insert(self):
 		if not self.joining_date:
 			self.joining_date = today()
 		if not self.employee_code:
 			last_code = frappe.db.sql(
-				"select max(cast(employee_code as unsigned)) from `tabEmployee` "
+				"select max(cast(employee_code as unsigned)) from `tabNeer Jal Employee` "
 				"where employee_code regexp '^[0-9]+$'"
 			)[0][0]
 			next_code = (int(last_code) if last_code else 0) + 1

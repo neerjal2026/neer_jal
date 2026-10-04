@@ -1,65 +1,36 @@
 # Neer Jal
 
-**Purified water can delivery, end to end.**
-Customers, trips, sales, payroll, and reporting — all driven by a single **Trip**, delivered as an installable mobile PWA.
+**Driver trip tracking and employee operations for a purified-water business.** Neer Jal is an installable mobile PWA backed by Frappe and built with Vue 3 and Frappe UI.
 
-### Stack / Architecture
+## Trip Tracking
 
-1. **Frappe Framework**: the backend, database, and admin/permission layer
-2. **Vue 3 + FrappeUI** (Tailwind-based): a fully custom SPA frontend — not the standard Frappe Desk — served as an installable Progressive Web App
-3. **wkhtmltopdf** (via Frappe's PDF utils): server-rendered HTML/CSS reports and payslips, exported as downloadable PDFs
+Drivers sign in with an Employee login assigned the **Driver** role (mapped to Frappe's existing **Sales User** role). A driver starts a trip by selecting a vehicle and trip route, entering the starting odometer reading, and optionally adding notes. The logged-in driver is assigned automatically.
 
-### The Main Entity
+When the trip closes, the driver enters the ending odometer reading. The app calculates distance travelled and records the route price as driver credit. Each completed trip creates one linked Driver Credit entry. Managers maintain route names and prices and can view the driver Trip Sheet, filter by date and driver, and export it as PDF.
 
-The **Trip** is the primary entity of the delivery workflow. A trip is opened against a **Vehicle** and **Driver** (odometer + cans loaded), accumulates **Sales Entries** as deliveries happen along the route, and is closed out with a final odometer reading and a damaged/remaining-can count. Everything else — reports, LCR settlement, customer balances — is derived from trips.
+## Employees and HR
 
-### Features
+Employee records can create Driver and Office Staff logins. Employee profiles include employment, address, and bank information.
 
-Not an exhaustive list, just to give you an idea.
+- **Time Clock** supports clock-in and clock-out, including shifts crossing midnight.
+- **Payroll** calculates pay for a selected date range and can export employee payslips as PDF.
+- **Salary Advances** tracks employee advances.
 
-#### Sales & Delivery Tracking
-
-Every delivery is recorded as a **Sales Entry** against a **Customer**, with automatic can-exchange accounting (cans given vs. cans returned) and five payment modes — Cash, UPI, Pending, LCR, and **Free** (for goodwill deliveries, forced to ₹0 and excluded from revenue). Customer can-balance and amount-due update automatically on every entry.
-
-#### Customer Management
-
-Customers get auto-generated 3-digit IDs, validated 10-digit phone numbers, and a per-customer SMS notification toggle.
-
-#### Trips, Vehicles & Drivers
-
-Trips guard against inconsistent odometer readings across successive trips on the same vehicle. Each closed trip can be exported as a landscape PDF **Trip Report** — vehicle, driver, sales person, timing, distance, and a full delivery breakdown by payment mode.
-
-#### Employees & HR
-
-A unified **Employee** doctype covers everyone on staff — plain employees, **Sales Person** logins (field delivery staff), and **Office Staff** logins (HR/admin). Full profile data is supported: personal details, address, education, employment status, and bank details.
-
-- **Time Clock** — manual clock-in/clock-out, correctly handling shifts that cross midnight
-- **Payroll** — run for any date range, paid to the exact minute (not rounded) against each employee's hourly wage, with a downloadable per-employee **Payslip** PDF
-
-#### Reports & LCR
-
-The **Delivery Report** breaks down sales by payment mode with per-mode subtotals, filterable by date range, customer, or sales person, and exportable as PDF. **LCR** (local cash receivable) tracks and settles cash a sales person personally collects in the field.
-
-#### Roles
+## Roles
 
 | Role | Access |
 |---|---|
-| **Sales Manager** | Full admin — customers, vehicles, drivers, employees, reports, settings |
-| **Sales User** | Field delivery staff — record sales, view own trips |
-| **Office Staff** | Time Clock + Payroll |
-| **System Manager** | Superuser fallback |
+| **Sales Manager** | Trip routes, all trips, vehicles, employees, Trip Sheet reports, and HR tools |
+| **Sales User** | Start and close own trips, view own trip history |
+| **Office Staff** | Time Clock, Salary Advances, and Payroll |
+| **System Manager** | Full system access |
 
-#### PWA Behavior
+## Installation
 
-Installed as a standalone app on mobile home screens. PDF downloads (reports, payslips) use the Web Share API with a blob-download fallback, since standalone PWA mode has no browser download UI. Login-required pages redirect guests straight to `/login`, and each role lands on its own home page post-login.
-
-### Installation
-
-\`\`\`bash
+```bash
 cd $PATH_TO_YOUR_BENCH
 bench get-app https://github.com/neerjal2026/neer_jal.git --branch main
 bench --site <site-name> install-app neer_jal
-\`\`\`
+```
 
-Roles (Sales Manager, Sales User, Office Staff) ship as fixtures and are created automatically on install.
-
+After updating an existing site, run `bench --site <site-name> migrate` to apply DocType changes and remove the retired customer, delivery, payment, driver-master, and SMS settings DocTypes and their records.

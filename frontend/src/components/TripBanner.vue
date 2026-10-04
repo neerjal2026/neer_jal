@@ -14,7 +14,7 @@
     <div v-else class="flex flex-wrap items-center justify-between gap-3">
       <p class="text-sm text-gray-500">
         You don't have an active trip.
-        <span v-if="canStartTrip">Start one before recording deliveries.</span>
+        <span v-if="canStartTrip">Start one to record your trip.</span>
         <span v-else>Only driver logins can start trips.</span>
       </p>
       <Button v-if="canStartTrip" theme="blue" variant="solid" @click="showStart = true">Start Trip</Button>

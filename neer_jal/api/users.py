@@ -27,7 +27,7 @@ def get_password_policy():
 
 
 @frappe.whitelist()
-def list_sales_users(start=0, page_length=10):
+def list_drivers(start=0, page_length=10):
 	_ensure_manager()
 	user_names = frappe.get_all(
 		"Has Role",
@@ -53,7 +53,7 @@ def _ensure_username_login_enabled():
 
 
 @frappe.whitelist()
-def reset_sales_user_password(user, new_password):
+def reset_employee_login_password(user, new_password):
 	_ensure_manager()
 	_ensure_employee_login(user)
 

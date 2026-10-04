@@ -10,7 +10,6 @@ from neer_jal.neer_jal.utils import validate_phone_number
 # UI label -> the actual Frappe Role granted to the login created for that employee.
 ROLE_MAP = {
 	"Driver": "Sales User",
-	"Sales Person": "Sales User",
 	"Office Staff": "Office Staff",
 }
 
@@ -95,7 +94,7 @@ def create_employee(
 
 	employee = frappe.get_doc(
 		{
-			"doctype": "Employee",
+			"doctype": "Neer Jal Employee",
 			"employee_name": employee_name,
 			"phone": phone,
 			"role": role,
@@ -170,7 +169,7 @@ def update_employee(
 	other_bank_details=None,
 ):
 	_ensure_manager()
-	employee = frappe.get_doc("Employee", name)
+	employee = frappe.get_doc("Neer Jal Employee", name)
 	if phone is not None:
 		employee.phone = validate_phone_number(phone, "Phone") if phone else None
 	if hourly_wage is not None:
@@ -196,7 +195,7 @@ def update_employee(
 @frappe.whitelist()
 def delete_employee(name):
 	_ensure_manager()
-	employee = frappe.get_doc("Employee", name)
+	employee = frappe.get_doc("Neer Jal Employee", name)
 	user = employee.user
 	deleted = {}
 
@@ -204,13 +203,10 @@ def delete_employee(name):
 	for doctype, filters in (
 		("Time Log", {"employee": employee.name}),
 		("Salary Advance", {"employee": employee.name}),
-		("Sales Entry", {"sales_person": user}),
-		("Payment Entry", {"sales_person": user}),
 		("Driver Credit", {"driver": user}),
 		("Trip", {"driver": user}),
-		("Trip", {"sales_person": user}),
 	):
-		if not user and ({"sales_person", "driver"} & set(filters)):
+		if not user and "driver" in filters:
 			continue
 		doc_names = frappe.get_all(doctype, filters=filters, pluck="name")
 		for doc_name in doc_names:
@@ -218,8 +214,8 @@ def delete_employee(name):
 		if doc_names:
 			deleted[doctype] = len(doc_names)
 
-	frappe.delete_doc("Employee", employee.name, ignore_permissions=True)
-	deleted["Employee"] = 1
+	frappe.delete_doc("Neer Jal Employee", employee.name, ignore_permissions=True)
+	deleted["Neer Jal Employee"] = 1
 
 	if user and frappe.db.exists("User", user):
 		frappe.delete_doc("User", user, ignore_permissions=True)
@@ -232,7 +228,7 @@ def delete_employee(name):
 def get_employees_with_status():
 	_ensure_hr_manager()
 	employees = frappe.get_all(
-		"Employee",
+		"Neer Jal Employee",
 		filters={"disabled": 0},
 		fields=["name", "employee_code", "employee_name", "role", "hourly_wage"],
 		order_by="employee_name asc",
@@ -293,7 +289,7 @@ def cancel_time_log(employee):
 def get_employee_time_logs(employee, month, page=1, page_length=10):
 	_ensure_hr_manager()
 	employee_doc = frappe.db.get_value(
-		"Employee", employee, ["name", "employee_code", "employee_name"], as_dict=True
+		"Neer Jal Employee", employee, ["name", "employee_code", "employee_name"], as_dict=True
 	)
 	if not employee_doc:
 		frappe.throw("Employee not found")
@@ -344,7 +340,7 @@ def delete_time_log(name):
 @frappe.whitelist()
 def add_past_time_log(employee, time_in, time_out):
 	_ensure_hr_manager()
-	if not frappe.db.exists("Employee", {"name": employee, "disabled": 0}):
+	if not frappe.db.exists("Neer Jal Employee", {"name": employee, "disabled": 0}):
 		frappe.throw("Select an active employee")
 
 	time_in = get_datetime(time_in)
@@ -410,7 +406,7 @@ def get_salary_advances(month, page=1, page_length=10):
 	)
 	employee_names = {advance.employee for advance in advances}
 	employees = frappe.get_all(
-		"Employee",
+		"Neer Jal Employee",
 		filters={"name": ["in", list(employee_names)]},
 		fields=["name", "employee_code", "employee_name"],
 	) if employee_names else []
@@ -432,7 +428,7 @@ def get_salary_advances(month, page=1, page_length=10):
 @frappe.whitelist()
 def create_salary_advance(employee, advance_date, amount, notes=None):
 	_ensure_hr_manager()
-	if not frappe.db.exists("Employee", {"name": employee, "disabled": 0}):
+	if not frappe.db.exists("Neer Jal Employee", {"name": employee, "disabled": 0}):
 		frappe.throw("Select an active employee")
 
 	advance = frappe.get_doc(
@@ -505,7 +501,7 @@ def run_payroll(from_date, to_date):
 		return []
 
 	employees = frappe.get_all(
-		"Employee",
+		"Neer Jal Employee",
 		filters={"name": ["in", list(employee_names)]},
 		fields=["name", "employee_name", "hourly_wage"],
 	)
@@ -598,7 +594,7 @@ def _build_payslip_html(employee, from_date, to_date, logs, hours_display, total
 @frappe.whitelist()
 def download_payslip_pdf(employee, from_date, to_date):
 	_ensure_hr_manager()
-	emp = frappe.db.get_value("Employee", employee, ["name", "employee_name", "hourly_wage"], as_dict=True)
+	emp = frappe.db.get_value("Neer Jal Employee", employee, ["name", "employee_name", "hourly_wage"], as_dict=True)
 	if not emp:
 		frappe.throw("Employee not found")
 

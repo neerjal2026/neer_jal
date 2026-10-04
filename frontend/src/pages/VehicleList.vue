@@ -75,7 +75,7 @@ const showDialog = ref(false)
 const editingVehicle = ref(null)
 
 const vehicles = createListResource({
-  doctype: 'Vehicle',
+  doctype: 'Neer Jal Vehicle',
   fields: ['name', 'vehicle_number', 'model', 'mileage', 'disabled'],
   orderBy: 'vehicle_number asc',
   pageLength: 10,

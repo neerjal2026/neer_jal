@@ -46,7 +46,7 @@ watch(show, (value) => {
 })
 
 const reset = createResource({
-  url: 'neer_jal.api.users.reset_sales_user_password',
+  url: 'neer_jal.api.users.reset_employee_login_password',
 })
 
 function submit() {

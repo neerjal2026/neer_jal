@@ -9,19 +9,14 @@
  "field_order": [
   "vehicle",
   "driver",
-  "sales_person",
-    "trip_route",
+  "trip_route",
   "status",
   "column_break_main",
   "start_km",
-  "cans_loaded",
-    "route_price",
-    "driver_credit",
+  "route_price",
+  "driver_credit",
   "start_time",
   "end_km",
-  "cans_delivered",
-  "cans_damaged",
-  "cans_remaining",
   "end_time",
   "distance_km",
   "section_break_notes",
@@ -33,7 +28,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle",
-   "options": "Vehicle",
+    "options": "Neer Jal Vehicle",
    "reqd": 1
   },
   {
@@ -41,7 +36,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Driver",
-  "default": "__user",
+   "default": "__user",
     "options": "User",
    "reqd": 1
   },
@@ -50,16 +45,8 @@
     "fieldtype": "Link",
     "in_list_view": 1,
     "label": "Trip Route",
-    "options": "Trip Route"
-  },
-  {
-   "default": "__user",
-   "fieldname": "sales_person",
-   "fieldtype": "Link",
-    "hidden": 1,
-   "label": "Sales Person",
-    "options": "User",
-    "read_only": 1
+    "options": "Trip Route",
+    "reqd": 1
   },
   {
    "default": "Active",
@@ -84,26 +71,18 @@
   },
   {
    "default": "0",
-   "fieldname": "cans_loaded",
-   "fieldtype": "Int",
-   "label": "Cans Loaded for Trip",
-   "non_negative": 1,
-   "reqd": 1
+   "fieldname": "route_price",
+   "fieldtype": "Currency",
+   "label": "Trip Route Price",
+   "read_only": 1
   },
-    {
-     "default": "0",
-     "fieldname": "route_price",
-     "fieldtype": "Currency",
-     "label": "Trip Route Price",
-     "read_only": 1
-    },
-    {
-     "default": "0",
-     "fieldname": "driver_credit",
-     "fieldtype": "Currency",
-     "label": "Driver Credit",
-     "read_only": 1
-    },
+  {
+   "default": "0",
+   "fieldname": "driver_credit",
+   "fieldtype": "Currency",
+   "label": "Driver Credit",
+   "read_only": 1
+  },
   {
    "default": "now",
    "fieldname": "start_time",
@@ -116,29 +95,6 @@
    "fieldtype": "Float",
    "label": "Ending KM",
    "non_negative": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "cans_delivered",
-   "fieldtype": "Int",
-   "label": "Cans Delivered",
-   "non_negative": 1,
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "cans_damaged",
-   "fieldtype": "Int",
-   "label": "Cans Damaged",
-   "non_negative": 1,
-   "description": "Out of the cans not delivered, how many were damaged. Reduces the good cans returned to stock."
-  },
-  {
-   "default": "0",
-   "fieldname": "cans_remaining",
-   "fieldtype": "Int",
-   "label": "Cans Remaining (Good, Returned to Stock)",
-   "read_only": 1
   },
   {
    "fieldname": "end_time",

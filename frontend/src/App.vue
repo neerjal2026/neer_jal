@@ -93,19 +93,13 @@ const navItems = computed(() => {
     ]
   }
 
-  const items = [
-    { label: 'Sales', to: '/sales' },
-    { label: 'Customers', to: '/customers' },
-    { label: 'Trips', to: '/trips' },
-  ]
+  const items = [{ label: 'Trips', to: '/trips' }]
   if (isManager.value) {
     items.push(
       { label: 'Vehicles', to: '/vehicles' },
       { label: 'Trip Routes', to: '/trip-routes' },
       { label: 'Employees', to: '/employees' },
-      { label: 'Reports', to: '/reports' },
-      { label: 'LCR', to: '/lcr' },
-      { label: 'Settings', to: '/settings' },
+      { label: 'Trip Sheet', to: '/reports' },
     )
   }
   if (isHrManager.value) {

@@ -9,6 +9,8 @@
       </div>
     </div>
 
+    <TripBanner @change="trips.reload()" />
+
     <div class="boxed-fields mb-4 grid grid-cols-1 gap-4 rounded-lg border bg-white p-4 sm:grid-cols-2 lg:grid-cols-3">
       <FormControl type="date" label="Date" v-model="selectedDate" @update:modelValue="onFilterChange" />
       <FormControl
@@ -25,7 +27,7 @@
     </div>
 
     <div class="overflow-x-auto rounded-lg border bg-white">
-      <table class="w-full min-w-[820px] text-left text-sm">
+      <table class="w-full min-w-[760px] text-left text-sm">
         <thead class="border-b bg-gray-50 text-xs uppercase text-gray-500">
           <tr>
             <th class="px-4 py-3 font-medium">Started</th>
@@ -34,7 +36,6 @@
             <th class="px-4 py-3 font-medium">Route</th>
             <th class="px-4 py-3 font-medium">Start / End KM</th>
             <th class="px-4 py-3 font-medium">Distance</th>
-            <th class="px-4 py-3 font-medium">Cans (Loaded/Delivered)</th>
             <th class="px-4 py-3 font-medium">Driver Credit</th>
             <th class="px-4 py-3 font-medium">Status</th>
           </tr>
@@ -50,9 +51,8 @@
             <td class="px-4 py-3 font-medium text-gray-900">{{ row.vehicle }}</td>
             <td class="px-4 py-3 text-gray-600">{{ driverLabel(row.driver) }}</td>
             <td class="px-4 py-3 text-gray-600">{{ routeLabel(row.trip_route) }}</td>
-            <td class="px-4 py-3 text-gray-600">{{ row.start_km }} / {{ row.end_km || '-' }}</td>
-            <td class="px-4 py-3 text-gray-600">{{ row.distance_km || '-' }}</td>
-            <td class="px-4 py-3 text-gray-600">{{ row.cans_loaded }} / {{ row.cans_delivered || 0 }}</td>
+            <td class="px-4 py-3 text-gray-600">{{ row.start_km }} / {{ row.end_km ?? '-' }}</td>
+            <td class="px-4 py-3 text-gray-600">{{ row.distance_km ?? '-' }}</td>
             <td class="px-4 py-3 text-gray-600">{{ row.driver_credit || 0 }}</td>
             <td class="px-4 py-3">
               <Badge :theme="row.status === 'Active' ? 'orange' : 'green'" variant="subtle">
@@ -61,7 +61,7 @@
             </td>
           </tr>
           <tr v-if="!trips.list.loading && !trips.data?.length">
-            <td colspan="9" class="px-4 py-10 text-center text-gray-400">No trips found</td>
+            <td colspan="8" class="px-4 py-10 text-center text-gray-400">No trips found</td>
           </tr>
         </tbody>
       </table>
@@ -82,6 +82,7 @@
 import { computed, ref, watch } from 'vue'
 import { Button, Badge, FormControl, TabButtons, createListResource, createResource } from 'frappe-ui'
 import { isManager } from '@/utils/session'
+import TripBanner from '@/components/TripBanner.vue'
 
 function today() {
   return new Date().toISOString().slice(0, 10)
@@ -93,7 +94,7 @@ const selectedDate = ref(today())
 const selectedDriver = ref('')
 
 const drivers = createResource({
-  url: 'neer_jal.api.users.list_sales_users',
+  url: 'neer_jal.api.users.list_drivers',
   auto: false,
   params: { start: 0, page_length: 200 },
   initialData: [],
@@ -139,8 +140,6 @@ const trips = createListResource({
     'end_km',
     'distance_km',
     'start_time',
-    'cans_loaded',
-    'cans_delivered',
   ],
   orderBy: 'creation desc',
   pageLength: 10,
